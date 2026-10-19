@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Kirim origin halaman ini sebagai Referer ke ad server, supaya pengecekan allowed_domains bisa membaca domain publisher. -->
+  <meta name="referrer" content="origin">
+  <title>Lintas Kota - Halaman uji publisher</title>
+  <style>
+    :root {
+      --ink: #18222f;
+      --paper: #eef2f7;
+      --card: #ffffff;
+      --muted: #566377;
+      --blue: #1f5eff;
+      --green: #0fa37f;
+      --amber: #f0a21c;
+      --sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.5;
+    }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+    .page { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+    /* ---------- Kepala situs ---------- */
+    .lines {
+      height: 6px;
+      background: linear-gradient(90deg, var(--blue) 0 45%, var(--green) 45% 75%, var(--amber) 75% 100%);
+    }
+    .notice {
+      margin: 0;
+      padding: 8px 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .masthead { padding: 20px 0 14px; }
+    .brand {
+      margin: 0;
+      font-size: clamp(34px, 6vw, 52px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -.045em;
+    }
+    .tagline { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
+    .nav { display: flex; flex-wrap: wrap; gap: 6px 22px; padding: 14px 0 18px; font-weight: 600; font-size: 15px; }
+    .nav a { text-decoration: none; padding: 4px 0; border-bottom: 3px solid transparent; }
+    .nav a:hover, .nav a[aria-current] { border-bottom-color: var(--blue); }
+
+    /* ---------- Tata letak ---------- */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 56px;
+      align-items: start;
+      padding-bottom: 48px;
+    }
+
+    /* ---------- Artikel ---------- */
+    .byline { margin: 0 0 10px; font-size: 14px; color: var(--muted); }
+    h1.title {
+      margin: 0 0 18px;
+      font-size: clamp(32px, 5vw, 48px);
+      line-height: 1.04;
+      font-weight: 900;
+      letter-spacing: -.035em;
+      max-width: 17em;
+    }
+    .lede, .stop p {
+      font-family: var(--serif);
+      font-size: 19px;
+      line-height: 1.7;
+      max-width: 38em;
+    }
+    .lede { margin: 0 0 30px; }
+
+    .route {
+      position: relative;
+      margin-left: 6px;
+      padding-left: 28px;
+      border-left: 3px solid var(--blue);
+    }
+    .stop { position: relative; padding-bottom: 6px; }
+    .stop::before {
+      content: "";
+      position: absolute;
+      left: -38px; top: 6px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 4px solid var(--blue);
+    }
+    .stop h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: -.015em;
+    }
+    .stop p { margin: 0 0 22px; }
+
+    /* ---------- Slot iklan ---------- */
+    .ad { margin: 28px 0; }
+    .ad-label { margin: 0 0 6px; font-size: 12px; color: var(--muted); }
+    .ad-box {
+      position: relative;
+      width: 300px;
+      height: 250px;
+      max-width: 100%;
+      background: var(--card);
+      outline: 1px solid rgba(24, 34, 47, .14);
+    }
+    .ad-placeholder {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-content: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      background: repeating-linear-gradient(135deg, #f7f9fc 0 12px, #eef2f7 12px 24px);
+    }
+    .ad-placeholder small { display: block; margin-top: 2px; font-size: 12px; }
+    .ad-box.is-filled .ad-placeholder { display: none; }
+    .ad-mount { position: absolute; inset: 0; }
+    .ad-mount iframe { display: block; border: 0; max-width: 100%; }
+
+    /* ---------- Sidebar ---------- */
+    .aside-inner { position: sticky; top: 24px; }
+    .aside .ad { margin-top: 0; }
+    .popular { margin: 32px 0 0; }
+    .popular ul { margin: 0; padding: 0; list-style: none; }
+    .popular h2 { margin: 0 0 10px; font-size: 17px; font-weight: 800; }
+    .popular li { padding: 10px 0; border-top: 1px solid rgba(24, 34, 47, .14); font-size: 15px; font-weight: 600; line-height: 1.35; }
+
+    /* ---------- Panel uji tag ---------- */
+    .dev {
+      margin: 0 0 56px;
+      padding: 22px 24px 26px;
+      background: #17212e;
+      color: #e8eef6;
+      border-radius: 12px;
+    }
+    .dev summary { cursor: pointer; font-size: 18px; font-weight: 800; }
+    .dev p { margin: 10px 0 0; max-width: 52em; font-size: 14px; color: #b8c4d4; }
+    .dev code { font-family: Consolas, "Courier New", monospace; font-size: 13px; color: #ffd78a; }
+    .dev-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 18px; }
+    .dev label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
+    .dev textarea {
+      display: block;
+      width: 100%;
+      min-height: 112px;
+      padding: 10px 12px;
+      resize: vertical;
+      color: #e8eef6;
+      background: #0e1620;
+      border: 1px solid #33445a;
+      border-radius: 8px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .dev-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+    .btn {
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #17212e;
+      background: #e8eef6;
+    }
+    .btn--primary { background: #ffd78a; }
+    .btn:hover { filter: brightness(1.08); }
+    .status { font-size: 13px; color: #b8c4d4; }
+    .status[data-state="ok"] { color: #7be0bf; }
+    .status[data-state="err"] { color: #ff9d94; }
+    .dev .warn { margin-top: 16px; font-size: 13px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+      .aside-inner { position: static; }
+      .aside .ad { margin: 24px 0 0; }
+      .dev-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .page { padding: 0 16px; }
+      .route { padding-left: 22px; }
+      .stop::before { left: -32px; }
+      .lede, .stop p { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="lines" aria-hidden="true"></div>
+
+  <div class="page">
+    <p class="notice">Ini halaman uji publisher. Semua teks hanyalah contoh untuk menguji tampilan iklan.</p>
+
+    <header class="masthead">
+      <h1 class="brand">Lintas Kota</h1>
+      <p class="tagline">Cerita dari jalur-jalur kota</p>
+      <nav class="nav" aria-label="Utama">
+        <a href="#" aria-current="page">Transportasi</a>
+        <a href="#">Kuliner</a>
+        <a href="#">Gaya hidup</a>
+        <a href="#">Berita</a>
+      </nav>
+    </header>
+
+    <div class="layout">
+
+      <main>
+        <article>
+          <p class="byline">Oleh Redaksi Contoh, Rabu 14 Oktober 2026</p>
+          <h1 class="title">Tiga pemberhentian kopi di sepanjang jalur bus kota</h1>
+          <p class="lede">Naik bus dari utara ke selatan kota memakan waktu hampir dua jam. Cukup untuk tiga gelas kopi, asal kamu tahu di halte mana harus turun. Inilah tiga pemberhentian yang kami coba pekan ini.</p>
+
+          <div class="route">
+            <section class="stop">
+              <h2>Halte Kota Tua: Warung Kopi Pelabuhan</h2>
+              <p>Kedai kecil di sudut lapangan ini membuka pintunya sebelum matahari naik. Kopi tubruk disajikan dengan gula batu, dan pemiliknya masih menggiling biji sendiri tiap pagi. Datanglah sebelum pukul delapan kalau ingin kursi dekat jendela.</p>
+            </section>
+
+            <section class="stop">
+              <h2>Halte Sarinah: Kopi Tiga Roda</h2>
+              <p>Berawal dari gerobak sepeda, kini punya dua lantai dan antrean pegawai kantor setiap jam makan siang. Es kopi susu gula aren jadi andalan, dan harganya masih bersahabat untuk dompet akhir bulan.</p>
+            </section>
+
+            <!-- Slot 2: di dalam artikel -->
+            <aside class="ad" aria-label="Iklan">
+              <p class="ad-label">Iklan</p>
+              <div class="ad-box" id="box-article">
+                <div class="ad-placeholder"><span>Slot dalam artikel<small>300 × 250, belum ada tag</small></span></div>
+                <div class="ad-mount" id="mount-article"></div>
+              </div>
+            </aside>
+
+            <section class="stop">
+              <h2>Halte Blok M: Ruang Seduh</h2>
+              <p>Ruang ini lebih tenang. Barista menjelaskan asal tiap biji dan menyeduhnya satu per satu dengan metode pour over. Cocok untuk menutup perjalanan sambil menunggu hujan reda.</p>
+            </section>
+          </div>
+        </article>
+      </main>
+
+      <!-- Slot 1: sidebar -->
+      <aside class="aside">
+        <div class="aside-inner">
+          <div class="ad" aria-label="Iklan">
+            <p class="ad-label">Iklan</p>
+            <div class="ad-box" id="box-sidebar">
+              <div class="ad-placeholder"><span>Slot sidebar<small>300 × 250, belum ada tag</small></span></div>
+              <div class="ad-mount" id="mount-sidebar"></div>
+            </div>
+          </div>
+
+          <section class="popular" aria-labelledby="popular-title">
+            <h2 id="popular-title">Terpopuler</h2>
+            <ul>
+              <li>Mengapa antrean halte lebih pendek di hari Selasa</li>
+              <li>Peta rute bus terbaru, dibuat ulang oleh warga</li>
+              <li>Lima gang kuliner yang belum banyak dikenal</li>
+            </ul>
+          </section>
+        </div>
+      </aside>
+
+    </div>
+
+    <details class="dev" open>
+      <summary>Panel uji tag</summary>
+      <p>Tempel tag dari Tag Generator ad server, lalu klik <strong>Pasang</strong>. Tag disimpan di browser ini dan dipasang otomatis saat halaman dibuka lagi. Jalan pintas lewat alamat: <code>?api=http://localhost:4000&amp;p=KUNCI_SIDEBAR&amp;p2=KUNCI_ARTIKEL</code></p>
+
+      <div class="dev-grid">
+        <div>
+          <label for="tag-sidebar">Tag untuk slot sidebar</label>
+          <textarea id="tag-sidebar" spellcheck="false" placeholder='<script async src="http://localhost:4000/ad/tag.js?p=..."></script>'></textarea>
+          <div class="dev-actions">
+            <button type="button" class="btn btn--primary" data-action="install" data-slot="sidebar">Pasang</button>
+            <button type="button" class="btn" data-action="reload" data-slot="sidebar">Muat ulang iklan</button>
+            <button type="button" class="btn" data-action="clear" data-slot="sidebar">Hapus</button>
+            <span class="status" id="status-sidebar" role="status" data-state="idle">Belum ada tag.</span>
+          </div>
+        </div>
+
+        <div>
+          <label for="tag-article">Tag untuk slot dalam artikel</label>
+          <textarea id="tag-article" spellcheck="false" placeholder='<script async src="http://localhost:4000/ad/tag.js?p=..."></script>'></textarea>
+          <div class="dev-actions">
+            <button type="button" class="btn btn--primary" data-action="install" data-slot="article">Pasang</button>
+            <button type="button" class="btn" data-action="reload" data-slot="article">Muat ulang iklan</button>
+            <button type="button" class="btn" data-action="clear" data-slot="article">Hapus</button>
+            <span class="status" id="status-article" role="status" data-state="idle">Belum ada tag.</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="warn">Tag yang ditempel akan dijalankan apa adanya di halaman ini. Pakai hanya tag dari ad server milikmu.</p>
+    </details>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Opsional: isi tag langsung di sini jika tidak ingin menempel lewat panel.
+      var HARDCODED = { sidebar: '', article: '' };
+      var DEFAULT_API = 'http://localhost:4000';
+
+      var slots = {
+        sidebar: { storeKey: 'lk-tag-sidebar', param: 'p' },
+        article: { storeKey: 'lk-tag-article', param: 'p2' }
+      };
+
+      Object.keys(slots).forEach(function (name) {
+        var s = slots[name];
+        s.box = document.getElementById('box-' + name);
+        s.mount = document.getElementById('mount-' + name);
+        s.input = document.getElementById('tag-' + name);
+        s.status = document.getElementById('status-' + name);
+      });
+
+      var store = {
+        get: function (k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } },
+        set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) { /* abaikan */ } },
+        del: function (k) { try { localStorage.removeItem(k); } catch (e) { /* abaikan */ } }
+      };
+
+      function setStatus(name, text, state) {
+        var el = slots[name].status;
+        el.textContent = text;
+        el.setAttribute('data-state', state || 'idle');
+      }
+
+      // Menjalankan tag HTML (termasuk <script>) di dalam slot.
+      function runTag(name, html) {
+        var s = slots[name];
+        s.mount.replaceChildren();
+
+        var tpl = document.createElement('template');
+        tpl.innerHTML = html;
+        tpl.content.querySelectorAll('script').forEach(function (old) {
+          var fresh = document.createElement('script');
+          Array.prototype.forEach.call(old.attributes, function (a) {
+            fresh.setAttribute(a.name, a.value);
+          });
+          fresh.text = old.textContent;
+          old.replaceWith(fresh);
+        });
+
+        s.mount.appendChild(tpl.content);
+        s.box.classList.add('is-filled');
+        setStatus(name, 'Tag terpasang.', 'ok');
+      }
+
+      function clearSlot(name) {
+        var s = slots[name];
+        s.mount.replaceChildren();
+        s.box.classList.remove('is-filled');
+        s.input.value = '';
+        store.del(s.storeKey);
+        setStatus(name, 'Belum ada tag.', 'idle');
+      }
+
+      function install(name) {
+        var s = slots[name];
+        var html = s.input.value.trim();
+        if (!html) { setStatus(name, 'Tempel tag dulu.', 'err'); return; }
+        store.set(s.storeKey, html);
+        try { runTag(name, html); }
+        catch (e) { setStatus(name, 'Gagal: ' + e.message, 'err'); }
+      }
+
+      function reload(name) {
+        var s = slots[name];
+        var html = s.input.value.trim() || store.get(s.storeKey);
+        if (!html) { setStatus(name, 'Belum ada tag untuk dimuat ulang.', 'err'); return; }
+        try { runTag(name, html); }
+        catch (e) { setStatus(name, 'Gagal: ' + e.message, 'err'); }
+      }
+
+      // Jalan pintas lewat alamat: ?api=...&p=KUNCI&p2=KUNCI
+      function tagFromParams(api, key) {
+        var u = new URL(api);
+        if (u.protocol !== 'http:' && u.protocol !== 'https:') {
+          throw new Error('alamat api harus http atau https');
+        }
+        return '<script async src="' + u.origin + '/ad/tag.js?p=' + encodeURIComponent(key) + '"><\/script>';
+      }
+
+      var params = new URLSearchParams(window.location.search);
+      var api = params.get('api') || DEFAULT_API;
+
+      Object.keys(slots).forEach(function (name) {
+        var s = slots[name];
+        var html = '';
+        try {
+          var key = params.get(s.param);
+          if (key) html = tagFromParams(api, key);
+        } catch (e) {
+          setStatus(name, 'Gagal: ' + e.message, 'err');
+          return;
+        }
+        if (!html) html = HARDCODED[name] || store.get(s.storeKey);
+        if (!html) return;
+
+        s.input.value = html;
+        try { runTag(name, html); }
+        catch (e) { setStatus(name, 'Gagal: ' + e.message, 'err'); }
+      });
+
+      document.addEventListener('click', function (ev) {
+        var btn = ev.target.closest('[data-action]');
+        if (!btn) return;
+        var name = btn.getAttribute('data-slot');
+        var action = btn.getAttribute('data-action');
+        if (action === 'install') install(name);
+        else if (action === 'reload') reload(name);
+        else if (action === 'clear') clearSlot(name);
+      });
+    })();
+  </script>
+</body>
+</html>
