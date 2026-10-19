@@ -114,7 +114,7 @@
     .ad-box {
       position: relative;
       width: 300px;
-      height: 250px;
+      height: 600px;
       max-width: 100%;
       overflow: hidden;
       background: var(--card);
@@ -243,8 +243,8 @@
             <aside class="ad" aria-label="Iklan">
               <p class="ad-label">Iklan</p>
               <div class="ad-box" data-slot="article">
-                <div class="ad-placeholder"><span>Slot dalam artikel<small>300 × 250 · tag iframe</small></span></div>
-                <iframe src="http://localhost:4000/ad/frame" width="300" height="250" style="border:0;overflow:hidden" scrolling="no" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" referrerpolicy="origin"></iframe>
+                <div class="ad-placeholder"><span>Slot dalam artikel<small>300 × 600 · tag iframe</small></span></div>
+                <iframe src="http://localhost:4000/ad/frame" width="300" height="600" style="border:0;overflow:hidden" scrolling="no" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" referrerpolicy="origin"></iframe>
               </div>
             </aside>
 
@@ -262,8 +262,8 @@
           <div class="ad" aria-label="Iklan">
             <p class="ad-label">Iklan</p>
             <div class="ad-box" data-slot="sidebar">
-              <div class="ad-placeholder"><span>Slot sidebar<small>300 × 250 · tag JavaScript</small></span></div>
-              <script src="http://localhost:4000/ad/tag.js" data-size="300x250"></script>
+              <div class="ad-placeholder"><span>Slot sidebar<small>300 × 600 · tag JavaScript</small></span></div>
+              <script src="http://localhost:4000/ad/tag.js" data-size="300x600"></script>
             </div>
           </div>
 
@@ -286,12 +286,12 @@
 
       <div class="snippet">
         <div class="snippet-head"><span>Tag JavaScript (sidebar)</span><button type="button" class="copy" data-copy="code-js">Salin</button></div>
-        <pre id="code-js">&lt;script src="http://localhost:4000/ad/tag.js" data-size="300x250"&gt;&lt;/script&gt;</pre>
+        <pre id="code-js">&lt;script src="http://localhost:4000/ad/tag.js" data-size="300x600"&gt;&lt;/script&gt;</pre>
       </div>
 
       <div class="snippet">
         <div class="snippet-head"><span>Tag iframe (dalam artikel)</span><button type="button" class="copy" data-copy="code-iframe">Salin</button></div>
-        <pre id="code-iframe">&lt;iframe src="http://localhost:4000/ad/frame" width="300" height="250" style="border:0;overflow:hidden" scrolling="no" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" referrerpolicy="origin"&gt;&lt;/iframe&gt;</pre>
+        <pre id="code-iframe">&lt;iframe src="http://localhost:4000/ad/frame" width="300" height="600" style="border:0;overflow:hidden" scrolling="no" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" referrerpolicy="origin"&gt;&lt;/iframe&gt;</pre>
       </div>
     </details>
   </div>
